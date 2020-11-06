@@ -217,6 +217,7 @@
 				4C7A971D2554FB6A008266A7 /* SSJPageControlView.m */,
 				4C7A971E2554FB6A008266A7 /* SSJImagesScrollView.m */,
 				4C7A971F2554FB6A008266A7 /* SSJPageControlView.h */,
+				4C7A971D2554FB6A008266A7 /* SSJPageControlView.m */,
 			);
 			path = SSJImagesScrollView;
 			sourceTree = "<group>";

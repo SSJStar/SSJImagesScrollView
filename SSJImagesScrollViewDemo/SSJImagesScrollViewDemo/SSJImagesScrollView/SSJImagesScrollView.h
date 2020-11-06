@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param imageNames 图片数组，存放 图片名字或者图片URL
 /// @param type 图片类型，判断是不是网络图片
 /// @param placeholderImage 占位图片，当图片没加载好的时候预先显示
-- (void)drawUIWithImageNames:(NSArray *)imageNames type:(UIImageType)type placeholderImage:(UIImage *)placeholderImage;
+- (void)drawUIWithImageNames:(NSArray *)imageNames type:(UIImageType)type placeholderImage:(UIImage *)placeholderImage tapBlock:(void(^)(NSInteger index))tapBlock;
 @end
 
 NS_ASSUME_NONNULL_END
@@ -54,10 +54,14 @@ NS_ASSUME_NONNULL_END
      SSJImagesScrollView *scView = [[SSJImagesScrollView alloc] initWithFrame:scrollViewFrame];
      scView.openTimer = YES;
      if (!isHttpImage) {
-         [scView drawUIWithImageNames:images type:UIImageTypeOfStatic placeholderImage:[UIImage imageNamed:@"banner_placeholder"]];
+         [scView drawUIWithImageNames:images type:UIImageTypeOfStatic placeholderImage:[UIImage imageNamed:@"banner_placeholder"] tapBlock:^(NSInteger index) {
+             NSLog(@"点击第几个---%ld",index);
+         }];
      }else{
          //网络图片
-         [scView drawUIWithImageNames:images type:UIImageTypeOfUrl placeholderImage:[UIImage imageNamed:@"banner_placeholder"]];
+         [scView drawUIWithImageNames:images type:UIImageTypeOfUrl placeholderImage:[UIImage imageNamed:@"banner_placeholder"] tapBlock:^(NSInteger index) {
+             NSLog(@"点击第几个---%ld",index);
+         }];;
      }
      
      [self.view addSubview:scView];

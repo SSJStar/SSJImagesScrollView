@@ -40,10 +40,14 @@
     SSJImagesScrollView *scView = [[SSJImagesScrollView alloc] initWithFrame:scrollViewFrame];
     scView.openTimer = YES;
     if (!isHttpImage) {
-        [scView drawUIWithImageNames:images type:UIImageTypeOfStatic placeholderImage:[UIImage imageNamed:@"banner_placeholder"]];
+        [scView drawUIWithImageNames:images type:UIImageTypeOfStatic placeholderImage:[UIImage imageNamed:@"banner_placeholder"] tapBlock:^(NSInteger index) {
+            NSLog(@"点击第几个---%ld",index);
+        }];
     }else{
         //网络图片
-        [scView drawUIWithImageNames:images type:UIImageTypeOfUrl placeholderImage:[UIImage imageNamed:@"banner_placeholder"]];
+        [scView drawUIWithImageNames:images type:UIImageTypeOfUrl placeholderImage:[UIImage imageNamed:@"banner_placeholder"] tapBlock:^(NSInteger index) {
+            NSLog(@"点击第几个---%ld",index);
+        }];;
     }
     
     [self.view addSubview:scView];

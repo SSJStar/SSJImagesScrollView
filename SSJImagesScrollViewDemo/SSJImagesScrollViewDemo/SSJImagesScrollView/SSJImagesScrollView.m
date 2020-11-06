@@ -41,6 +41,9 @@
 @property (nonatomic,assign) UIImageType type;
 /// 占位图片
 @property (nonatomic,strong) UIImage *placeholderImage;
+///点击图片调用
+typedef void(^TapBlock)(NSInteger index);
+@property (nonatomic , copy) TapBlock tapBlock;
 @end
 @implementation SSJImagesScrollView
 
@@ -93,13 +96,18 @@
     self.scrollView.contentSize = CGSizeMake(scrollViewWidth * 3.0, scrollViewHeight);
     //第一次的时候 滚动到中间
     [self resetLocation];
+    ///添加手势
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageViewTap:)];
+    [self.scrollView addGestureRecognizer:tapGesture];
+    self.scrollView.userInteractionEnabled = YES;
+    
 }
 
 /// 填充图片
 /// @param imageNames 图片数组，存放 图片名字或者图片URL
 /// @param type 图片类型，判断是不是网络图片
 /// @param placeholderImage 占位图片，当图片没加载好的时候预先显示
-- (void)drawUIWithImageNames:(NSArray *)imageNames type:(UIImageType)type placeholderImage:(UIImage *)placeholderImage{
+- (void)drawUIWithImageNames:(NSArray *)imageNames type:(UIImageType)type placeholderImage:(UIImage *)placeholderImage tapBlock:(void(^)(NSInteger index))tapBlock{
     self.type = type;
     self.placeholderImage = placeholderImage;
     if (!self.placeholderImage) {
@@ -116,6 +124,9 @@
         [self.pageControlView initWithCount:imageNames.count block:^(SSJPageControlView * _Nonnull pageControlView) {
             [pageControlView updateSelectedIndex:0];
         }];
+    }
+    if(tapBlock){
+        self.tapBlock = tapBlock;
     }
 }
 
@@ -144,6 +155,7 @@
         self.nextPageIndex = currentIndex+1 == self.datas.count?(currentIndex+1-self.datas.count):(currentIndex+1);
         NSLog(@"lastPageIndex==%ld  currpentPageIndex==%ld  nextPageIndex==%ld",self.lastPageIndex,self.currpentPageIndex,self.nextPageIndex);
     }
+    
     [self loadImageWithIndex:self.lastPageIndex imageView:self.leftImageView];
     [self loadImageWithIndex:self.currpentPageIndex imageView:self.centerImageView];
     [self loadImageWithIndex:self.nextPageIndex imageView:self.rightImageView];
@@ -169,6 +181,15 @@
         
     }
 }
+
+#pragma mark -------- 点击图片动作 ---------
+- (void)imageViewTap:(UITapGestureRecognizer *)reg{
+    if(self.tapBlock){
+        self.tapBlock(self.currpentPageIndex);
+    }
+}
+
+
 #pragma mark ---------- UIScrollViewDelegate ----------
 ///执行scrollView的scrollRectToVisible方法才会进入这个代理方法
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
